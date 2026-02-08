@@ -9,40 +9,33 @@
 
 body{
     margin:0;
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
     color:white;
     text-align:center;
 }
 
 h1{
-    font-size:32px;
     text-shadow:0 0 15px cyan;
-}
-
-.container{
-    padding:15px;
 }
 
 textarea{
     width:90%;
     max-width:300px;
-    height:120px;
+    height:100px;
     font-size:16px;
     border-radius:10px;
     padding:10px;
-    border:none;
 }
 
 button{
     margin:5px;
-    padding:12px 20px;
+    padding:10px 15px;
     font-size:16px;
     border:none;
     border-radius:10px;
-    cursor:pointer;
     background:cyan;
-    font-weight:bold;
+    cursor:pointer;
 }
 
 canvas{
@@ -51,11 +44,31 @@ canvas{
     background:black;
     border-radius:50%;
     box-shadow:0 0 20px cyan;
-    margin-top:15px;
 }
 
 #seta{
     font-size:40px;
+}
+
+.nomeBtn{
+    display:block;
+    margin:3px auto;
+    background:red;
+    color:white;
+}
+
+.confete{
+    position:fixed;
+    width:10px;
+    height:10px;
+    top:-10px;
+    animation:cair 3s linear forwards;
+}
+
+@keyframes cair{
+    to{
+        transform:translateY(100vh) rotate(720deg);
+    }
 }
 
 </style>
@@ -63,19 +76,13 @@ canvas{
 </head>
 <body>
 
-<div class="container">
-
 <h1>🎯 Roleta do Felipe</h1>
 
-<textarea id="nomes" placeholder="Digite um nome por linha"></textarea>
+<textarea id="nomes"></textarea><br>
 
-<br>
-
-<button onclick="criarRoleta()">Criar</button>
+<button onclick="salvar()">Salvar nomes</button>
 <button onclick="girar()">Girar</button>
 <button onclick="resetar()">Reset</button>
-
-<br>
 
 <div id="seta">⬇</div>
 
@@ -84,30 +91,55 @@ canvas{
 <h3>🏆 Vencedores:</h3>
 <div id="vencedores"></div>
 
-</div>
+<h3>❌ Remover nome:</h3>
+<div id="remover"></div>
 
-<audio id="som">
-<source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3">
+<audio id="tic">
+<source src="https://www.soundjay.com/mechanical/sounds/mechanical-clonk-1.mp3">
+</audio>
+
+<audio id="win">
+<source src="https://www.soundjay.com/human/sounds/applause-01.mp3">
 </audio>
 
 <script>
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
 
-let nomes = [];
-let original = [];
+let nomes=[];
+let rotacao=0;
 let girando=false;
 
-const cores=["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff","#ff8800"];
+const cores=["red","blue","green","yellow","purple","orange","cyan"];
 
-function criarRoleta(){
+function salvar(){
 
-nomes=document.getElementById("nomes").value.split("\n").filter(n=>n);
+let texto=document.getElementById("nomes").value;
 
-original=[...nomes];
+nomes=texto.split("\n").filter(n=>n.trim()!="");
+
+localStorage.setItem("nomes",JSON.stringify(nomes));
 
 desenhar();
+mostrarRemover();
+
+}
+
+function carregar(){
+
+let salvo=localStorage.getItem("nomes");
+
+if(salvo){
+
+nomes=JSON.parse(salvo);
+
+document.getElementById("nomes").value=nomes.join("\n");
+
+desenhar();
+mostrarRemover();
+
+}
 
 }
 
@@ -115,7 +147,7 @@ function desenhar(){
 
 if(nomes.length==0) return;
 
-let angulo=2*Math.PI/nomes.length;
+let ang=2*Math.PI/nomes.length;
 
 ctx.clearRect(0,0,400,400);
 
@@ -123,7 +155,7 @@ for(let i=0;i<nomes.length;i++){
 
 ctx.beginPath();
 ctx.moveTo(200,200);
-ctx.arc(200,200,200,i*angulo,(i+1)*angulo);
+ctx.arc(200,200,200,i*ang,(i+1)*ang);
 
 ctx.fillStyle=cores[i%cores.length];
 ctx.fill();
@@ -131,10 +163,9 @@ ctx.fill();
 ctx.save();
 
 ctx.translate(200,200);
-ctx.rotate(i*angulo+angulo/2);
+ctx.rotate(i*ang+ang/2);
 
 ctx.fillStyle="white";
-ctx.font="bold 16px Arial";
 ctx.fillText(nomes[i],80,5);
 
 ctx.restore();
@@ -145,31 +176,44 @@ ctx.restore();
 
 function girar(){
 
-if(girando || nomes.length==0) return;
+if(girando||nomes.length==0)return;
 
 girando=true;
 
-let sorteio=Math.floor(Math.random()*nomes.length);
+let tic=setInterval(()=>{
+document.getElementById("tic").play();
+},200);
 
-let grau=360*5+(360/nomes.length)*(nomes.length-sorteio);
+let indice=Math.floor(Math.random()*nomes.length);
 
-canvas.style.transition="transform 4s ease-out";
-canvas.style.transform="rotate("+grau+"deg)";
+let angulo=360/nomes.length;
+
+let destino=270-(indice*angulo);
+
+rotacao+=360*5+destino;
+
+canvas.style.transition="4s";
+canvas.style.transform="rotate("+rotacao+"deg)";
 
 setTimeout(()=>{
 
-let vencedor=nomes[sorteio];
+clearInterval(tic);
 
-document.getElementById("som").play();
+let vencedor=nomes[indice];
+
+document.getElementById("win").play();
 
 document.getElementById("vencedores").innerHTML+=vencedor+"<br>";
 
-nomes.splice(sorteio,1);
+confete();
+
+nomes.splice(indice,1);
+
+localStorage.setItem("nomes",JSON.stringify(nomes));
 
 desenhar();
 
-canvas.style.transition="none";
-canvas.style.transform="rotate(0deg)";
+mostrarRemover();
 
 girando=false;
 
@@ -177,15 +221,77 @@ girando=false;
 
 }
 
+function confete(){
+
+for(let i=0;i<100;i++){
+
+let c=document.createElement("div");
+
+c.className="confete";
+
+c.style.left=Math.random()*100+"vw";
+
+c.style.background=cores[Math.floor(Math.random()*cores.length)];
+
+c.style.animationDuration=(Math.random()*3+2)+"s";
+
+document.body.appendChild(c);
+
+setTimeout(()=>c.remove(),5000);
+
+}
+
+}
+
 function resetar(){
 
-nomes=[...original];
+localStorage.removeItem("nomes");
+
+nomes=[];
+
+document.getElementById("nomes").value="";
 
 document.getElementById("vencedores").innerHTML="";
 
-desenhar();
+document.getElementById("remover").innerHTML="";
+
+ctx.clearRect(0,0,400,400);
 
 }
+
+function mostrarRemover(){
+
+let div=document.getElementById("remover");
+
+div.innerHTML="";
+
+nomes.forEach((nome,i)=>{
+
+let btn=document.createElement("button");
+
+btn.innerText=nome;
+
+btn.className="nomeBtn";
+
+btn.onclick=()=>{
+
+nomes.splice(i,1);
+
+localStorage.setItem("nomes",JSON.stringify(nomes));
+
+desenhar();
+
+mostrarRemover();
+
+};
+
+div.appendChild(btn);
+
+});
+
+}
+
+carregar();
 
 </script>
 
