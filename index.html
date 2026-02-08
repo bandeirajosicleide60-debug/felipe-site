@@ -9,14 +9,16 @@
 
 body{
 margin:0;
-font-family:Arial;
-background:linear-gradient(180deg,#2a0066,#4b0082);
+font-family:Arial, sans-serif;
+background:#3b0a75;
 color:white;
 }
 
-header{
-background:#5a00cc;
-padding:15px;
+/* TOPO */
+
+.topo{
+background:linear-gradient(90deg,#6a00ff,#a020f0);
+padding:12px;
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -28,38 +30,70 @@ font-weight:bold;
 color:#ffcc00;
 }
 
-.saldo{
-background:#7b1fff;
-padding:8px 15px;
-border-radius:10px;
+.saldo-box{
+display:flex;
+align-items:center;
+gap:10px;
 }
 
-button{
-background:#ffcc00;
+.saldo{
+background:#5c00cc;
+padding:6px 12px;
+border-radius:20px;
+}
+
+.depositar{
+background:#ff66cc;
 border:none;
-padding:10px 15px;
-border-radius:8px;
+padding:6px 12px;
+border-radius:20px;
+color:white;
 font-weight:bold;
 }
 
+/* CARDS */
+
 .games{
+padding:15px;
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:15px;
-padding:15px;
+gap:12px;
 }
 
-.game{
-background:#6a00ff;
-padding:15px;
-border-radius:12px;
-text-align:center;
+.card{
+background:#5a189a;
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 0 10px rgba(0,0,0,0.5);
 }
 
-.game img{
+.card img{
 width:100%;
-border-radius:10px;
 }
+
+.card p{
+margin:8px;
+font-weight:bold;
+}
+
+/* BARRA INFERIOR */
+
+.footer{
+position:fixed;
+bottom:0;
+width:100%;
+background:#4b0082;
+display:flex;
+justify-content:space-around;
+padding:10px;
+}
+
+.footer div{
+text-align:center;
+font-size:12px;
+}
+
+/* TIGRINHO */
 
 .hidden{
 display:none;
@@ -71,52 +105,62 @@ padding:20px;
 }
 
 .spin{
-font-size:20px;
+background:#ffcc00;
+border:none;
 padding:15px 30px;
+border-radius:10px;
+font-size:18px;
 margin-top:20px;
 }
 
 </style>
-</head>
 
+</head>
 <body>
 
-<header>
 
-<div class="logo">DAPAZ CASSINO 🎰</div>
+<!-- TOPO -->
 
-<div>
-<span class="saldo" id="saldo">R$ 100,00</span>
-<button onclick="depositar()">Depositar</button>
+<div class="topo">
+
+<div class="logo">DAPAZ CASSINO</div>
+
+<div class="saldo-box">
+
+<div class="saldo" id="saldo">R$ 100,00</div>
+
+<button class="depositar" onclick="depositar()">Depositar</button>
+
 </div>
 
-</header>
+</div>
 
 
-<!-- TELA PRINCIPAL -->
+
+<!-- HOME -->
 
 <div id="home">
 
 <div class="games">
 
-<div class="game" onclick="abrirTigre()">
+<div class="card" onclick="abrirTigre()">
 <img src="https://i.imgur.com/WzQX9bA.png">
-<h3>Fortune Tiger 🐯</h3>
+<p>Fortune Tiger</p>
 </div>
 
-<div class="game">
+<div class="card">
 <img src="https://i.imgur.com/6X4QZ5G.png">
-<h3>Fortune Rabbit 🐰</h3>
+<p>Fortune Rabbit</p>
 </div>
 
-<div class="game">
+<div class="card">
 <img src="https://i.imgur.com/nkKQZ7G.png">
-<h3>Fortune Dragon 🐉</h3>
+<p>Fortune Dragon</p>
 </div>
 
-<div class="game">
-<img src="https://i.imgur.com/Z6XQZ7G.png">
-<h3>Coming Soon</h3>
+<div class="card">
+<img src="https://i.imgur.com/WzQX9bA.png">
+<p>Coming Soon</p>
 </div>
 
 </div>
@@ -124,13 +168,14 @@ margin-top:20px;
 </div>
 
 
-<!-- TELA TIGRINHO -->
+
+<!-- TIGRE -->
 
 <div id="tigre" class="hidden center">
 
 <h1>🐯 Fortune Tiger</h1>
 
-<h2 id="resultado">Clique em GIRAR</h2>
+<h2 id="resultado">Saldo atual</h2>
 
 <button class="spin" onclick="girar()">GIRAR</button>
 
@@ -142,50 +187,69 @@ margin-top:20px;
 
 
 
+<!-- MENU INFERIOR -->
+
+<div class="footer">
+
+<div>🏠<br>Inicio</div>
+
+<div>🎁<br>Bônus</div>
+
+<div>🎰<br>Slots</div>
+
+<div>👤<br>Perfil</div>
+
+</div>
+
+
+
 <script>
 
 let saldo = 100;
 
 function atualizarSaldo(){
-document.getElementById("saldo").innerText = "R$ " + saldo.toFixed(2);
+
+document.getElementById("saldo").innerText =
+"R$ " + saldo.toFixed(2);
+
 }
 
 
 function depositar(){
 
-alert("DEPÓSITOS DESATIVADOS\nModo demonstração");
+alert("Depósitos desativados no modo demo");
 
 }
 
 
 function abrirTigre(){
 
-document.getElementById("home").classList.add("hidden");
-document.getElementById("tigre").classList.remove("hidden");
+home.classList.add("hidden");
+tigre.classList.remove("hidden");
 
 }
 
 
 function voltar(){
 
-document.getElementById("home").classList.remove("hidden");
-document.getElementById("tigre").classList.add("hidden");
+home.classList.remove("hidden");
+tigre.classList.add("hidden");
 
 }
 
 
 function girar(){
 
-let ganhou = Math.random() > 0.5;
+let win = Math.random() > 0.5;
 
-if(ganhou){
+if(win){
 
 let valor = Math.floor(Math.random()*50);
 
 saldo += valor;
 
-document.getElementById("resultado").innerText =
-"VOCÊ GANHOU R$ "+valor;
+resultado.innerText =
+"Ganhou R$ " + valor;
 
 }else{
 
@@ -193,8 +257,8 @@ let valor = Math.floor(Math.random()*30);
 
 saldo -= valor;
 
-document.getElementById("resultado").innerText =
-"VOCÊ PERDEU R$ "+valor;
+resultado.innerText =
+"Perdeu R$ " + valor;
 
 }
 
@@ -204,8 +268,8 @@ atualizarSaldo();
 
 }
 
-
 </script>
+
 
 </body>
 </html>
