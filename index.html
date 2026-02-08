@@ -3,40 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Roleta Profissional do Felipe</title>
+<title>Roleta Correta</title>
 
 <style>
 
 body{
-margin:0;
-background:radial-gradient(circle,#0f2027,#203a43,#2c5364);
+background:#0f2027;
 color:white;
-font-family:Arial;
 text-align:center;
-}
-
-h1{
-text-shadow:0 0 20px cyan;
-}
-
-textarea{
-width:300px;
-height:120px;
-border-radius:10px;
-padding:10px;
-font-size:16px;
-}
-
-button{
-padding:10px 15px;
-margin:5px;
-font-size:16px;
-border:none;
-border-radius:10px;
-background:cyan;
-cursor:pointer;
-font-weight:bold;
+font-family:Arial;
 }
 
 #container{
@@ -46,8 +21,8 @@ display:inline-block;
 
 #seta{
 position:absolute;
-left:50%;
 top:-10px;
+left:50%;
 transform:translateX(-50%);
 font-size:40px;
 z-index:10;
@@ -56,41 +31,29 @@ z-index:10;
 canvas{
 background:black;
 border-radius:50%;
-box-shadow:0 0 30px cyan;
 }
 
-.confete{
-position:fixed;
-width:10px;
-height:10px;
-top:-10px;
-animation:cair linear forwards;
+button{
+padding:10px;
+margin:5px;
+font-size:16px;
 }
 
-@keyframes cair{
-to{
-transform:translateY(100vh) rotate(720deg);
-}
-}
-
-#ranking{
-margin-top:20px;
+textarea{
+width:300px;
+height:120px;
 }
 
 </style>
-
 </head>
 <body>
 
-<h1>🎯 Roleta Profissional</h1>
+<h1>🎯 Roleta</h1>
 
 <textarea id="nomes"></textarea><br>
 
 <button onclick="salvar()">Salvar</button>
 <button onclick="girar()">Girar</button>
-<button onclick="resetar()">Reset</button>
-
-<br><br>
 
 <div id="container">
 
@@ -102,36 +65,16 @@ margin-top:20px;
 
 <h2 id="resultado"></h2>
 
-<div id="ranking">
-<h3>🏆 Ranking:</h3>
-<div id="listaRanking"></div>
-</div>
-
-<audio id="tic">
-<source src="https://www.soundjay.com/mechanical/sounds/mechanical-clonk-1.mp3">
-</audio>
-
-<audio id="win">
-<source src="https://www.soundjay.com/human/sounds/applause-01.mp3">
-</audio>
-
 <script>
 
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
 let nomes=[];
-let ranking=[];
-
-let anguloAtual=0;
-let velocidade=0;
+let rotacao=0;
 let girando=false;
 
-const cores=[
-"#ff0000","#00ff00","#0000ff",
-"#ffff00","#ff00ff","#00ffff",
-"#ff8800","#00ff88"
-];
+const cores=["red","blue","green","yellow","purple","orange","cyan"];
 
 function salvar(){
 
@@ -139,52 +82,26 @@ nomes=document.getElementById("nomes").value
 .split("\n")
 .filter(n=>n.trim()!="");
 
-localStorage.setItem("nomes",JSON.stringify(nomes));
-
-desenhar();
-
-}
-
-function carregar(){
-
-let salvo=localStorage.getItem("nomes");
-let rank=localStorage.getItem("ranking");
-
-if(salvo){
-
-nomes=JSON.parse(salvo);
-
-document.getElementById("nomes").value=nomes.join("\n");
-
-}
-
-if(rank){
-
-ranking=JSON.parse(rank);
-
-mostrarRanking();
-
-}
-
 desenhar();
 
 }
 
 function desenhar(){
 
-if(nomes.length==0)return;
-
-let ang=2*Math.PI/nomes.length;
-
 ctx.clearRect(0,0,400,400);
 
+let angulo=360/nomes.length;
+
 for(let i=0;i<nomes.length;i++){
+
+let inicio=(angulo*i-90)*(Math.PI/180);
+let fim=(angulo*(i+1)-90)*(Math.PI/180);
 
 ctx.beginPath();
 
 ctx.moveTo(200,200);
 
-ctx.arc(200,200,200,i*ang,(i+1)*ang);
+ctx.arc(200,200,200,inicio,fim);
 
 ctx.fillStyle=cores[i%cores.length];
 
@@ -194,13 +111,11 @@ ctx.save();
 
 ctx.translate(200,200);
 
-ctx.rotate(i*ang+ang/2);
+ctx.rotate((inicio+fim)/2);
 
 ctx.fillStyle="white";
 
-ctx.font="bold 16px Arial";
-
-ctx.fillText(nomes[i],100,5);
+ctx.fillText(nomes[i],100,0);
 
 ctx.restore();
 
@@ -210,132 +125,46 @@ ctx.restore();
 
 function girar(){
 
-if(girando||nomes.length==0)return;
+if(girando || nomes.length==0)return;
 
 girando=true;
 
-velocidade=Math.random()*0.3+0.4;
+// rotação aleatória
+let giro=Math.random()*360+1440;
 
-animar();
+rotacao+=giro;
 
-}
+canvas.style.transition="4s ease-out";
 
-function animar(){
+canvas.style.transform=`rotate(${rotacao}deg)`;
 
-anguloAtual+=velocidade;
+setTimeout(()=>{
 
-velocidade*=0.985;
+// normaliza entre 0 e 360
+let anguloFinal=rotacao%360;
 
-canvas.style.transform=`rotate(${anguloAtual}rad)`;
+// calcula posição da seta (topo)
+let anguloSeta=(360-anguloFinal+270)%360;
 
-if(Math.random()<0.2){
+let tamanhoSetor=360/nomes.length;
 
-document.getElementById("tic").play();
-
-}
-
-if(velocidade<0.002){
-
-finalizar();
-
-return;
-
-}
-
-requestAnimationFrame(animar);
-
-}
-
-function finalizar(){
-
-let angulo=anguloAtual%(2*Math.PI);
-
-let setor=(2*Math.PI)/nomes.length;
-
-let indice=Math.floor((2*Math.PI-angulo)/setor)%nomes.length;
+let indice=Math.floor(anguloSeta/tamanhoSetor);
 
 let vencedor=nomes[indice];
 
 document.getElementById("resultado").innerText=
 "🏆 "+vencedor;
 
-document.getElementById("win").play();
-
-confete();
-
-// adiciona ao ranking
-ranking.push(vencedor);
-
-localStorage.setItem("ranking",JSON.stringify(ranking));
-
-mostrarRanking();
-
-// remove automaticamente
+// remove corretamente
 nomes.splice(indice,1);
-
-localStorage.setItem("nomes",JSON.stringify(nomes));
 
 desenhar();
 
 girando=false;
 
-}
-
-function mostrarRanking(){
-
-let div=document.getElementById("listaRanking");
-
-div.innerHTML="";
-
-ranking.forEach((nome,i)=>{
-
-div.innerHTML+=(i+1)+". "+nome+"<br>";
-
-});
+},4000);
 
 }
-
-function confete(){
-
-for(let i=0;i<100;i++){
-
-let c=document.createElement("div");
-
-c.className="confete";
-
-c.style.left=Math.random()*100+"vw";
-
-c.style.background=
-cores[Math.floor(Math.random()*cores.length)];
-
-c.style.animationDuration=
-(Math.random()*3+2)+"s";
-
-document.body.appendChild(c);
-
-setTimeout(()=>c.remove(),5000);
-
-}
-
-}
-
-function resetar(){
-
-localStorage.removeItem("nomes");
-localStorage.removeItem("ranking");
-
-nomes=[];
-ranking=[];
-
-document.getElementById("nomes").value="";
-document.getElementById("resultado").innerText="";
-document.getElementById("listaRanking").innerHTML="";
-
-ctx.clearRect(0,0,400,400);
-
-}
-
-carregar();
 
 </script>
 
