@@ -2,105 +2,172 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Felipe System</title>
+<title>DAPAZ HACKER</title>
 
 <style>
-body {
-    background: black;
-    color: #00ff00;
-    font-family: monospace;
-    text-align: center;
-    margin-top: 10%;
+body{
+background:black;
+color:#00ff00;
+font-family:monospace;
+text-align:center;
+padding-top:50px;
 }
 
-input {
-    background: black;
-    border: 1px solid #00ff00;
-    color: #00ff00;
-    padding: 10px;
-    margin: 5px;
+input,button{
+background:black;
+color:#00ff00;
+border:1px solid #00ff00;
+padding:10px;
+margin:5px;
 }
 
-button {
-    background: black;
-    border: 1px solid #00ff00;
-    color: #00ff00;
-    padding: 10px;
-    cursor: pointer;
+button:hover{
+background:#003300;
+cursor:pointer;
 }
 
-#terminal {
-    margin-top: 20px;
-    white-space: pre-line;
+#loading,#terminal,#acesso{
+display:none;
+margin-top:20px;
 }
 
-#counter {
-    margin-top: 10px;
-    color: red;
-}
 </style>
-
 </head>
-<body onclick="fullscreen()">
+<body>
 
-<h1>FELIPE SYSTEM v3.0</h1>
+<h1>DAPAZ HACKER v4.0</h1>
 
-<input type="text" id="user" placeholder="Usuário"><br>
-<input type="password" id="pass" placeholder="Senha"><br>
+<div id="login">
 
-<button onclick="hack()">ACESSAR</button>
+<input id="user" placeholder="Usuário"><br>
 
-<div id="counter">Tentativas: 0</div>
+<input id="pass" type="password" placeholder="Senha"><br>
 
-<div id="terminal"></div>
+<button onclick="entrar()">ACESSAR</button>
+
+<p>Tentativas: <span id="tentativas">0</span></p>
+
+<p id="erro" style="color:red;"></p>
+
+</div>
+
+<div id="loading">
+<h2>Invadindo sistema...</h2>
+<p id="loadText"></p>
+</div>
+
+<div id="terminal">
+<h2>TERMINAL</h2>
+<p id="term"></p>
+
+<button onclick="acessoFinal()">ACESSAR SISTEMA</button>
+
+</div>
+
+<div id="acesso">
+<h2 style="color:lime;">ACESSO TOTAL CONCEDIDO</h2>
+
+<p>IP: 192.168.43.221</p>
+<p>LOCALIZAÇÃO: Brasil</p>
+<p>STATUS: ROOT</p>
+
+</div>
 
 <script>
 
-let tentativas = 0;
+let tentativas=0;
 
-function fullscreen() {
-    document.documentElement.requestFullscreen();
+function entrar(){
+
+let user=document.getElementById("user").value;
+let pass=document.getElementById("pass").value;
+
+if(user==="dapaz" && pass==="1234"){
+
+document.getElementById("login").style.display="none";
+
+loading();
+
+}else{
+
+tentativas++;
+
+document.getElementById("tentativas").innerText=tentativas;
+
+document.getElementById("erro").innerText="ACESSO NEGADO";
+
 }
 
-function hack() {
+}
 
-    tentativas++;
-    document.getElementById("counter").innerText =
-    "Tentativas: " + tentativas;
+function loading(){
 
-    let terminal = document.getElementById("terminal");
+document.getElementById("loading").style.display="block";
 
-    terminal.innerHTML = "";
+let textos=[
+"Conectando ao servidor...",
+"Injetando exploit...",
+"Quebrando firewall...",
+"Acessando banco de dados...",
+"Obtendo acesso root..."
+];
 
-    let textos = [
-        "Conectando ao servidor...",
-        "Acesso detectado...",
-        "Bypass de segurança...",
-        "Invadindo banco de dados...",
-        "Localizando IP...",
-        "IP encontrado: 192.168.0." + tentativas,
-        "Acesso completo concedido",
-        "Bem-vindo Felipe"
-    ];
+let i=0;
 
-    let i = 0;
+let interval=setInterval(()=>{
 
-    function escrever() {
+document.getElementById("loadText").innerText=textos[i];
 
-        if (i < textos.length) {
+i++;
 
-            terminal.innerHTML += textos[i] + "\n";
+if(i>=textos.length){
 
-            i++;
+clearInterval(interval);
 
-            setTimeout(escrever, 800);
+document.getElementById("loading").style.display="none";
 
-        }
+terminal();
 
-    }
+}
 
-    escrever();
+},1000);
+
+}
+
+function terminal(){
+
+document.getElementById("terminal").style.display="block";
+
+let comandos=[
+"> conectar root",
+"> acesso autorizado",
+"> baixando dados",
+"> acesso completo"
+];
+
+let i=0;
+
+let interval=setInterval(()=>{
+
+document.getElementById("term").innerHTML+=comandos[i]+"<br>";
+
+i++;
+
+if(i>=comandos.length){
+
+clearInterval(interval);
+
+}
+
+},700);
+
+}
+
+function acessoFinal(){
+
+document.getElementById("terminal").style.display="none";
+
+document.getElementById("acesso").style.display="block";
 
 }
 
