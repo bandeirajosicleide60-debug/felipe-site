@@ -2,49 +2,42 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Roleta Profissional</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roleta do Felipe</title>
 
 <style>
 
 body{
     margin:0;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
     color:white;
     text-align:center;
 }
 
 h1{
-    margin-top:20px;
-    font-size:40px;
-    text-shadow:0 0 20px cyan;
+    font-size:32px;
+    text-shadow:0 0 15px cyan;
 }
 
 .container{
-    display:flex;
-    justify-content:center;
-    gap:40px;
-    margin-top:20px;
-}
-
-.left{
-    display:flex;
-    flex-direction:column;
+    padding:15px;
 }
 
 textarea{
-    width:250px;
-    height:200px;
-    font-size:18px;
+    width:90%;
+    max-width:300px;
+    height:120px;
+    font-size:16px;
     border-radius:10px;
     padding:10px;
     border:none;
 }
 
 button{
-    margin-top:10px;
-    padding:12px;
-    font-size:18px;
+    margin:5px;
+    padding:12px 20px;
+    font-size:16px;
     border:none;
     border-radius:10px;
     cursor:pointer;
@@ -52,22 +45,17 @@ button{
     font-weight:bold;
 }
 
-button:hover{
-    background:white;
-}
-
 canvas{
+    width:90%;
+    max-width:350px;
     background:black;
     border-radius:50%;
-    box-shadow:0 0 30px cyan;
+    box-shadow:0 0 20px cyan;
+    margin-top:15px;
 }
 
 #seta{
-    font-size:50px;
-}
-
-.vencedores{
-    margin-top:20px;
+    font-size:40px;
 }
 
 </style>
@@ -75,34 +63,26 @@ canvas{
 </head>
 <body>
 
-<h1>🎯 ROLETA PROFISSIONAL</h1>
-
 <div class="container">
 
-<div class="left">
+<h1>🎯 Roleta do Felipe</h1>
 
-<textarea id="nomes" placeholder="Um nome por linha"></textarea>
+<textarea id="nomes" placeholder="Digite um nome por linha"></textarea>
 
-<button onclick="criarRoleta()">Criar Roleta</button>
+<br>
 
+<button onclick="criarRoleta()">Criar</button>
 <button onclick="girar()">Girar</button>
+<button onclick="resetar()">Reset</button>
 
-<button onclick="resetar()">Resetar</button>
-
-<div class="vencedores">
-<h3>🏆 Vencedores:</h3>
-<div id="listaVencedores"></div>
-</div>
-
-</div>
-
-<div>
+<br>
 
 <div id="seta">⬇</div>
 
 <canvas id="canvas" width="400" height="400"></canvas>
 
-</div>
+<h3>🏆 Vencedores:</h3>
+<div id="vencedores"></div>
 
 </div>
 
@@ -116,119 +96,94 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let nomes = [];
-let nomesOriginais = [];
-let anguloAtual = 0;
-let girando = false;
+let original = [];
+let girando=false;
 
-const cores = [
-"#ff0000","#00ff00","#0000ff","#ffff00",
-"#ff00ff","#00ffff","#ff8800","#88ff00",
-"#0088ff","#ff0088"
-];
+const cores=["#ff0000","#00ff00","#0000ff","#ffff00","#ff00ff","#00ffff","#ff8800"];
 
 function criarRoleta(){
 
-    const texto = document.getElementById("nomes").value;
+nomes=document.getElementById("nomes").value.split("\n").filter(n=>n);
 
-    nomes = texto.split("\n").filter(n=>n.trim()!="");
+original=[...nomes];
 
-    nomesOriginais = [...nomes];
-
-    desenhar();
+desenhar();
 
 }
 
 function desenhar(){
 
-    const total = nomes.length;
-    const angulo = (2*Math.PI)/total;
+if(nomes.length==0) return;
 
-    ctx.clearRect(0,0,400,400);
+let angulo=2*Math.PI/nomes.length;
 
-    for(let i=0;i<total;i++){
+ctx.clearRect(0,0,400,400);
 
-        ctx.beginPath();
+for(let i=0;i<nomes.length;i++){
 
-        ctx.moveTo(200,200);
+ctx.beginPath();
+ctx.moveTo(200,200);
+ctx.arc(200,200,200,i*angulo,(i+1)*angulo);
 
-        ctx.arc(200,200,200,i*angulo,(i+1)*angulo);
+ctx.fillStyle=cores[i%cores.length];
+ctx.fill();
 
-        ctx.fillStyle = cores[i%cores.length];
+ctx.save();
 
-        ctx.fill();
+ctx.translate(200,200);
+ctx.rotate(i*angulo+angulo/2);
 
-        ctx.save();
+ctx.fillStyle="white";
+ctx.font="bold 16px Arial";
+ctx.fillText(nomes[i],80,5);
 
-        ctx.translate(200,200);
+ctx.restore();
 
-        ctx.rotate(i*angulo + angulo/2);
-
-        ctx.fillStyle="white";
-
-        ctx.font="16px Arial";
-
-        ctx.fillText(nomes[i],80,5);
-
-        ctx.restore();
-
-    }
+}
 
 }
 
 function girar(){
 
-    if(girando || nomes.length==0) return;
+if(girando || nomes.length==0) return;
 
-    girando=true;
+girando=true;
 
-    const voltas = 5;
-    const sorteio = Math.floor(Math.random()*nomes.length);
+let sorteio=Math.floor(Math.random()*nomes.length);
 
-    const anguloPorNome = 360/nomes.length;
+let grau=360*5+(360/nomes.length)*(nomes.length-sorteio);
 
-    const anguloFinal = (360 - sorteio*anguloPorNome) + 360*voltas;
+canvas.style.transition="transform 4s ease-out";
+canvas.style.transform="rotate("+grau+"deg)";
 
-    canvas.style.transition="transform 4s ease-out";
+setTimeout(()=>{
 
-    canvas.style.transform="rotate("+anguloFinal+"deg)";
+let vencedor=nomes[sorteio];
 
-    setTimeout(()=>{
+document.getElementById("som").play();
 
-        const vencedor = nomes[sorteio];
+document.getElementById("vencedores").innerHTML+=vencedor+"<br>";
 
-        document.getElementById("som").play();
+nomes.splice(sorteio,1);
 
-        adicionarVencedor(vencedor);
+desenhar();
 
-        nomes.splice(sorteio,1);
+canvas.style.transition="none";
+canvas.style.transform="rotate(0deg)";
 
-        desenhar();
+girando=false;
 
-        canvas.style.transition="none";
-
-        canvas.style.transform="rotate(0deg)";
-
-        girando=false;
-
-    },4000);
-
-}
-
-function adicionarVencedor(nome){
-
-    const div = document.getElementById("listaVencedores");
-
-    div.innerHTML += nome + "<br>";
+},4000);
 
 }
 
 function resetar(){
 
-    nomes = [...nomesOriginais];
+nomes=[...original];
 
-    document.getElementById("listaVencedores").innerHTML="";
+document.getElementById("vencedores").innerHTML="";
 
-    desenhar();
+desenhar();
 
 }
 
