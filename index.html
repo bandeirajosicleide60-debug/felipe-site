@@ -1,30 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-  <title>Frases Motivacionais</title>
+<meta charset="UTF-8">
+<title>Frases Motivacionais</title>
+
+<style>
+
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial, sans-serif;
+  color:white;
+  text-align:center;
+  transition: background 1s ease;
+}
+
+/* caixa */
+.container{
+  background: rgba(0,0,0,0.5);
+  padding:40px;
+  border-radius:20px;
+  max-width:600px;
+}
+
+/* título */
+h1{
+  font-size:40px;
+  margin-bottom:20px;
+}
+
+/* frase grande */
+#frase{
+  font-size:32px;
+  margin-bottom:30px;
+}
+
+/* botão */
+button{
+  font-size:20px;
+  padding:15px 30px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:white;
+  color:black;
+  font-weight:bold;
+  transition: transform 0.2s;
+}
+
+button:hover{
+  transform:scale(1.1);
+}
+
+</style>
+
 </head>
-<body>
+<body id="body">
 
-<h1>Frase do dia</h1>
+<div class="container">
 
-<p id="frase">Clique no botão para ver uma frase</p>
+<h1>🔥 Frase do dia</h1>
+
+<p id="frase">Clique no botão</p>
 
 <button onclick="novaFrase()">Nova frase</button>
 
+</div>
+
 <script>
-function novaFrase() {
-  const frases = [
-    "Nunca desista.",
-    "Você é mais forte do que pensa.",
-    "O sucesso vem com o tempo.",
-    "Continue, você está no caminho certo.",
-    "Disciplina vence motivação."
-  ];
+
+const frases = [
+"Nunca desista.",
+"Você é mais forte do que pensa.",
+"O sucesso vem com disciplina.",
+"Grandes coisas levam tempo.",
+"Seu futuro depende do que você faz hoje.",
+"Confie no processo.",
+"Você nasceu para vencer."
+];
+
+const fundos = [
+"linear-gradient(45deg, #ff416c, #ff4b2b)",
+"linear-gradient(45deg, #2193b0, #6dd5ed)",
+"linear-gradient(45deg, #cc2b5e, #753a88)",
+"linear-gradient(45deg, #ee0979, #ff6a00)",
+"linear-gradient(45deg, #00c6ff, #0072ff)",
+"linear-gradient(45deg, #56ab2f, #a8e063)",
+"linear-gradient(45deg, #ff512f, #dd2476)"
+];
+
+function novaFrase(){
 
   const numero = Math.floor(Math.random() * frases.length);
 
   document.getElementById("frase").innerText = frases[numero];
+
+  document.getElementById("body").style.background = fundos[numero];
+
 }
+
 </script>
 
 </body>
