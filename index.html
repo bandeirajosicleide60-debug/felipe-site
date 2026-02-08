@@ -2,103 +2,233 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Frases Motivacionais</title>
+<title>Roleta Profissional</title>
 
 <style>
 
 body{
-  margin:0;
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:Arial, sans-serif;
-  color:white;
-  text-align:center;
-  transition: background 1s ease;
+    margin:0;
+    font-family: Arial;
+    background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
+    color:white;
+    text-align:center;
 }
 
-/* caixa */
-.container{
-  background: rgba(0,0,0,0.5);
-  padding:40px;
-  border-radius:20px;
-  max-width:600px;
-}
-
-/* título */
 h1{
-  font-size:40px;
-  margin-bottom:20px;
+    margin-top:20px;
+    font-size:40px;
+    text-shadow:0 0 20px cyan;
 }
 
-/* frase grande */
-#frase{
-  font-size:32px;
-  margin-bottom:30px;
+.container{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    margin-top:20px;
 }
 
-/* botão */
+.left{
+    display:flex;
+    flex-direction:column;
+}
+
+textarea{
+    width:250px;
+    height:200px;
+    font-size:18px;
+    border-radius:10px;
+    padding:10px;
+    border:none;
+}
+
 button{
-  font-size:20px;
-  padding:15px 30px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  background:white;
-  color:black;
-  font-weight:bold;
-  transition: transform 0.2s;
+    margin-top:10px;
+    padding:12px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:cyan;
+    font-weight:bold;
 }
 
 button:hover{
-  transform:scale(1.1);
+    background:white;
+}
+
+canvas{
+    background:black;
+    border-radius:50%;
+    box-shadow:0 0 30px cyan;
+}
+
+#seta{
+    font-size:50px;
+}
+
+.vencedores{
+    margin-top:20px;
 }
 
 </style>
 
 </head>
-<body id="body">
+<body>
+
+<h1>🎯 ROLETA PROFISSIONAL</h1>
 
 <div class="container">
 
-<h1>🔥 Frase do dia</h1>
+<div class="left">
 
-<p id="frase">Clique no botão</p>
+<textarea id="nomes" placeholder="Um nome por linha"></textarea>
 
-<button onclick="novaFrase()">Nova frase</button>
+<button onclick="criarRoleta()">Criar Roleta</button>
+
+<button onclick="girar()">Girar</button>
+
+<button onclick="resetar()">Resetar</button>
+
+<div class="vencedores">
+<h3>🏆 Vencedores:</h3>
+<div id="listaVencedores"></div>
+</div>
 
 </div>
 
+<div>
+
+<div id="seta">⬇</div>
+
+<canvas id="canvas" width="400" height="400"></canvas>
+
+</div>
+
+</div>
+
+<audio id="som">
+<source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3">
+</audio>
+
 <script>
 
-const frases = [
-"Nunca desista.",
-"Você é mais forte do que pensa.",
-"O sucesso vem com disciplina.",
-"Grandes coisas levam tempo.",
-"Seu futuro depende do que você faz hoje.",
-"Confie no processo.",
-"Você nasceu para vencer."
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let nomes = [];
+let nomesOriginais = [];
+let anguloAtual = 0;
+let girando = false;
+
+const cores = [
+"#ff0000","#00ff00","#0000ff","#ffff00",
+"#ff00ff","#00ffff","#ff8800","#88ff00",
+"#0088ff","#ff0088"
 ];
 
-const fundos = [
-"linear-gradient(45deg, #ff416c, #ff4b2b)",
-"linear-gradient(45deg, #2193b0, #6dd5ed)",
-"linear-gradient(45deg, #cc2b5e, #753a88)",
-"linear-gradient(45deg, #ee0979, #ff6a00)",
-"linear-gradient(45deg, #00c6ff, #0072ff)",
-"linear-gradient(45deg, #56ab2f, #a8e063)",
-"linear-gradient(45deg, #ff512f, #dd2476)"
-];
+function criarRoleta(){
 
-function novaFrase(){
+    const texto = document.getElementById("nomes").value;
 
-  const numero = Math.floor(Math.random() * frases.length);
+    nomes = texto.split("\n").filter(n=>n.trim()!="");
 
-  document.getElementById("frase").innerText = frases[numero];
+    nomesOriginais = [...nomes];
 
-  document.getElementById("body").style.background = fundos[numero];
+    desenhar();
+
+}
+
+function desenhar(){
+
+    const total = nomes.length;
+    const angulo = (2*Math.PI)/total;
+
+    ctx.clearRect(0,0,400,400);
+
+    for(let i=0;i<total;i++){
+
+        ctx.beginPath();
+
+        ctx.moveTo(200,200);
+
+        ctx.arc(200,200,200,i*angulo,(i+1)*angulo);
+
+        ctx.fillStyle = cores[i%cores.length];
+
+        ctx.fill();
+
+        ctx.save();
+
+        ctx.translate(200,200);
+
+        ctx.rotate(i*angulo + angulo/2);
+
+        ctx.fillStyle="white";
+
+        ctx.font="16px Arial";
+
+        ctx.fillText(nomes[i],80,5);
+
+        ctx.restore();
+
+    }
+
+}
+
+function girar(){
+
+    if(girando || nomes.length==0) return;
+
+    girando=true;
+
+    const voltas = 5;
+    const sorteio = Math.floor(Math.random()*nomes.length);
+
+    const anguloPorNome = 360/nomes.length;
+
+    const anguloFinal = (360 - sorteio*anguloPorNome) + 360*voltas;
+
+    canvas.style.transition="transform 4s ease-out";
+
+    canvas.style.transform="rotate("+anguloFinal+"deg)";
+
+    setTimeout(()=>{
+
+        const vencedor = nomes[sorteio];
+
+        document.getElementById("som").play();
+
+        adicionarVencedor(vencedor);
+
+        nomes.splice(sorteio,1);
+
+        desenhar();
+
+        canvas.style.transition="none";
+
+        canvas.style.transform="rotate(0deg)";
+
+        girando=false;
+
+    },4000);
+
+}
+
+function adicionarVencedor(nome){
+
+    const div = document.getElementById("listaVencedores");
+
+    div.innerHTML += nome + "<br>";
+
+}
+
+function resetar(){
+
+    nomes = [...nomesOriginais];
+
+    document.getElementById("listaVencedores").innerHTML="";
+
+    desenhar();
 
 }
 
