@@ -109,31 +109,56 @@
     </section>
 
     <section id="cardapio" class="container py-5">
-        <h2 class="text-center mb-5">Nossas Especialidades</h2>
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card card-cardapio p-4 shadow-sm">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-fire-alt fa-3x text-danger me-3"></i>
-                        <div>
-                            <h3>Churrascaria</h3>
-                            <p>Cortes nobres preparados na brasa com o tempero tradicional da ilha.</p>
-                        </div>
+        <section id="cardapio" class="container py-5">
+    <h2 class="text-center mb-5">Nosso Cardápio</h2>
+    
+    <ul class="nav nav-pills mb-4 justify-content-center" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active btn-primary me-2" id="pills-churrasco-tab" data-bs-toggle="pill" data-bs-target="#pills-churrasco">🔥 Churrasco</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn-primary" id="pills-pizza-tab" data-bs-toggle="pill" data-bs-target="#pills-pizza">🍕 Pizzas</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-churrasco">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between border-bottom pb-2">
+                        <span><strong>Picanha na Brasa (Individual)</strong><br><small>Acompanha arroz, feijão, farofa e fritas.</small></span>
+                        <span class="text-danger fw-bold">R$ 45,00</span>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card card-cardapio p-4 shadow-sm">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-pizza-slice fa-3x text-danger me-3"></i>
-                        <div>
-                            <h3>Pizzaria</h3>
-                            <p>Massa artesanal e ingredientes frescos em sabores clássicos e exclusivos.</p>
-                        </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between border-bottom pb-2">
+                        <span><strong>Misto Especial (2 pessoas)</strong><br><small>Boi, frango, linguiça e acompanhamentos.</small></span>
+                        <span class="text-danger fw-bold">R$ 85,00</span>
                     </div>
                 </div>
-            </div>
+                </div>
         </div>
+
+        <div class="tab-pane fade" id="pills-pizza">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between border-bottom pb-2">
+                        <span><strong>Pizza Portuguesa</strong><br><small>Ovo, presunto, cebola, ervilha e mussarela.</small></span>
+                        <span class="text-danger fw-bold">R$ 38,00</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between border-bottom pb-2">
+                        <span><strong>Pizza Calabresa</strong><br><small>Calabresa fatiada, cebola e orégano.</small></span>
+                        <span class="text-danger fw-bold">R$ 35,00</span>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </div>
+</section>
+
+           
     </section>
 
     <section id="sobre" class="py-5 bg-white">
