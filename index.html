@@ -1,118 +1,31 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Links de Perfil</title>
-    <style>
-        body {
-            background-color: #121212;
-            color: white;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .profile-container {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .profile-pic {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            border: 3px solid #70f0b4;
-            object-fit: cover;
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            font-size: 26px;
-            margin: 10px 0 5px;
-        }
-
-        .description {
-            color: #a0a0a0;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .links-container {
-            width: 100%;
-            max-width: 380px;
-        }
-
-        .link-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #70f0b4;
-            color: #000;
-            text-decoration: none;
-            padding: 16px;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .link-button:hover {
-            transform: scale(1.03);
-            background-color: #5ecf9b;
-        }
-
-        .link-button span {
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        .link-button.special {
-            background: linear-gradient(135deg, #70f0b4, #489b77);
-        }
-
-        footer {
-            margin-top: 40px;
-            font-size: 11px;
-            color: #555;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-    </style>
+  <title>Frases Motivacionais</title>
 </head>
 <body>
 
-    <div class="profile-container">
-        <img src="IMG_5915.jpeg" alt="IMG_5915.jpeg" class="profile-pic">
-        
-        <h1>WELLI JOB's</h1>
-        <p class="description">Criadora de conteúdo | job | Empreendedora</p>
-    </div>
+<h1>Frase do dia</h1>
 
-    <div class="links-container">
-        <a href="#" target="_blank" class="link-button">
-            <span>📸</span> Instagram
-        </a>
-        <a href="#" target="_blank" class="link-button">
-            <span>🔥</span> vem ser feliz
-        </a>
-        <a href="#" target="_blank" class="link-button">
-            <span>💬</span> WhatsApp
-        </a>
-        <a href="#" target="_blank" class="link-button special">
-            <span>💰</span> privacy
-        </a>
-    </div>
+<p id="frase">Clique no botão para ver uma frase</p>
 
-    <footer>
-        Criado por DAPAZ DEV
-    </footer>
+<button onclick="novaFrase()">Nova frase</button>
+
+<script>
+function novaFrase() {
+  const frases = [
+    "Nunca desista.",
+    "Você é mais forte do que pensa.",
+    "O sucesso vem com o tempo.",
+    "Continue, você está no caminho certo.",
+    "Disciplina vence motivação."
+  ];
+
+  const numero = Math.floor(Math.random() * frases.length);
+
+  document.getElementById("frase").innerText = frases[numero];
+}
+</script>
 
 </body>
 </html>
