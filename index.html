@@ -8,7 +8,7 @@
         body {
             background-color: #121212;
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -27,7 +27,7 @@
             width: 130px;
             height: 130px;
             border-radius: 50%;
-            border: 3px solid #70f0b4; /* Círculo verde neon */
+            border: 3px solid #70f0b4;
             object-fit: cover;
             margin-bottom: 15px;
         }
@@ -35,7 +35,6 @@
         h1 {
             font-size: 26px;
             margin: 10px 0 5px;
-            font-weight: 600;
         }
 
         .description {
@@ -66,7 +65,7 @@
 
         .link-button:hover {
             transform: scale(1.03);
-            filter: brightness(1.1);
+            background-color: #5ecf9b;
         }
 
         .link-button span {
@@ -74,7 +73,6 @@
             font-size: 18px;
         }
 
-        /* Efeito de degradê no último botão como no modelo */
         .link-button.special {
             background: linear-gradient(135deg, #70f0b4, #489b77);
         }
@@ -82,37 +80,38 @@
         footer {
             margin-top: 40px;
             font-size: 11px;
-            color: #444;
+            color: #555;
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
     <div class="profile-container">
-        <img src="perfil.jpg" alt="IMG_5902.jpeg" class="profile-pic">
+        <img src="image.png" alt="Foto de Perfil" class="profile-pic">
         
-        <h1>DAPAZ</h1>
+        <h1>Seu Nome</h1>
         <p class="description">Criador de conteúdo | Gamer | Empreendedor</p>
     </div>
 
     <div class="links-container">
-        <a href="SEU_LINK_AQUI" target="_blank" class="link-button">
+        <a href="#" target="_blank" class="link-button">
             <span>📸</span> Instagram
         </a>
-        <a href="SEU_LINK_AQUI" target="_blank" class="link-button">
+        <a href="#" target="_blank" class="link-button">
             <span>🎮</span> YouTube
         </a>
-        <a href="SEU_LINK_AQUI" target="_blank" class="link-button">
+        <a href="#" target="_blank" class="link-button">
             <span>💬</span> WhatsApp
         </a>
-        <a href="SEU_LINK_AQUI" target="_blank" class="link-button special">
+        <a href="#" target="_blank" class="link-button special">
             <span>💰</span> Meu Site
         </a>
     </div>
 
     <footer>
-        CRIADO POR DAPAZ DEV
+        Criado por DAPAZ DEV
     </footer>
 
 </body>
