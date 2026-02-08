@@ -1,0 +1,157 @@
+<style>
+body {
+  background-color: black;
+  color: #00ff00;
+  font-family: monospace;
+  margin: 0;
+  padding: 20px;
+}
+
+#login, #loading, #system, #hack, #mapa {
+  display: none;
+}
+
+input, button {
+  background: black;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  padding: 10px;
+  font-family: monospace;
+}
+
+button:hover {
+  background: #003300;
+  cursor: pointer;
+}
+
+#progressBar {
+  width: 0%;
+  height: 20px;
+  background: #00ff00;
+}
+
+#progressContainer {
+  width: 100%;
+  border: 1px solid #00ff00;
+  margin-top: 10px;
+}
+
+#mapa {
+  margin-top: 20px;
+  font-size: 14px;
+}
+</style>
+
+<div id="login">
+  <h2>TERMINAL SEGURO v4.2</h2>
+  <p>Digite a senha:</p>
+  <input type="password" id="senha">
+  <br><br>
+  <button onclick="entrar()">ACESSAR</button>
+  <p id="erro"></p>
+</div>
+
+<div id="loading">
+  <p>Iniciando sistema...</p>
+  <div id="progressContainer">
+    <div id="progressBar"></div>
+  </div>
+</div>
+
+<div id="system">
+  <pre id="terminal"></pre>
+  <button onclick="invadir()">INVADIR SISTEMA</button>
+</div>
+
+<div id="hack">
+  <pre id="hackText"></pre>
+</div>
+
+<div id="mapa">
+  <pre>
+CONECTADO AO SATÉLITE
+
+[BRASIL]
+   ↓
+[ACESSO REMOTO ESTABELECIDO]
+IP: 192.168.4.21
+STATUS: CONTROLE TOTAL
+  </pre>
+</div>
+
+<audio id="som" src="https://www.soundjay.com/mechanical/keyboard-1.mp3"></audio>
+
+<script>
+document.getElementById("login").style.display = "block";
+
+let som = document.getElementById("som");
+
+function tocarSom() {
+  som.currentTime = 0;
+  som.play();
+}
+
+function entrar() {
+  let senha = document.getElementById("senha").value;
+  
+  if (senha === "1234") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("loading").style.display = "block";
+    carregarBarra();
+  } else {
+    document.getElementById("erro").innerHTML = "ACESSO NEGADO";
+  }
+}
+
+let progresso = 0;
+
+function carregarBarra() {
+  if (progresso < 100) {
+    progresso++;
+    document.getElementById("progressBar").style.width = progresso + "%";
+    setTimeout(carregarBarra, 30);
+  } else {
+    iniciarTerminal();
+  }
+}
+
+let texto = "Conectando ao servidor...\nAcesso autorizado.\nBem-vindo, Felipe.\nSistema pronto.\n";
+
+let i = 0;
+
+function iniciarTerminal() {
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("system").style.display = "block";
+  digitarTerminal();
+}
+
+function digitarTerminal() {
+  if (i < texto.length) {
+    document.getElementById("terminal").innerHTML += texto.charAt(i);
+    tocarSom();
+    i++;
+    setTimeout(digitarTerminal, 50);
+  }
+}
+
+let hackTexto = "Invadindo firewall...\nQuebrando segurança...\nAcesso root concedido...\nSistema sob controle.\n";
+
+let j = 0;
+
+function invadir() {
+  document.getElementById("system").style.display = "none";
+  document.getElementById("hack").style.display = "block";
+  digitarHack();
+}
+
+function digitarHack() {
+  if (j < hackTexto.length) {
+    document.getElementById("hackText").innerHTML += hackTexto.charAt(j);
+    tocarSom();
+    j++;
+    setTimeout(digitarHack, 50);
+  } else {
+    document.getElementById("mapa").style.display = "block";
+  }
+}
+</script>
