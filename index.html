@@ -1,124 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
-
-<title>DAPAZ TIGRINHO</title>
+<title>DAPAZ HACKER</title>
 
 <style>
-
-body{
-margin:0;
-background:#8B0000;
-font-family:Arial;
-color:white;
-text-align:center;
+body {
+  background: black;
+  color: #00ff00;
+  font-family: monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-/* TOPO TIGRE */
-
-.topo{
-background:url("https://i.imgur.com/7QZ6Q9A.png");
-background-size:cover;
-padding:40px;
-font-size:22px;
-font-weight:bold;
+/* LOGIN */
+#login-box {
+  text-align: center;
+  border: 1px solid #00ff00;
+  padding: 20px;
+  width: 300px;
 }
 
-/* SLOT */
-
-.slot{
-background:#b30000;
-margin:20px;
-padding:20px;
-border-radius:15px;
-box-shadow:0 0 20px gold;
+input {
+  width: 90%;
+  padding: 8px;
+  margin: 5px;
+  background: black;
+  border: 1px solid #00ff00;
+  color: #00ff00;
 }
 
-.reels{
-display:flex;
-justify-content:center;
-gap:10px;
-font-size:40px;
+button {
+  width: 95%;
+  padding: 10px;
+  margin-top: 10px;
+  background: black;
+  border: 1px solid #00ff00;
+  color: #00ff00;
+  cursor: pointer;
 }
 
-.reel{
-background:#fff;
-color:black;
-padding:20px;
-border-radius:10px;
-width:60px;
+button:hover {
+  background: #00ff00;
+  color: black;
 }
 
-/* BOTAO GIRAR */
-
-.spin{
-background:linear-gradient(gold,orange);
-border:none;
-width:100px;
-height:100px;
-border-radius:50%;
-font-size:18px;
-font-weight:bold;
-margin-top:20px;
-box-shadow:0 0 20px gold;
+/* PAINEL */
+#painel {
+  display: none;
+  text-align: center;
 }
 
-/* SALDO */
-
-.saldo{
-background:black;
-padding:10px;
-margin:10px;
-border-radius:10px;
+.option {
+  border: 1px solid #00ff00;
+  padding: 15px;
+  margin: 10px;
+  cursor: pointer;
 }
 
+.option:hover {
+  background: #00ff00;
+  color: black;
+}
 </style>
-
 </head>
-
 <body>
 
-<div class="topo">
-🐯 DAPAZ TIGRINHO
+<!-- LOGIN -->
+<div id="login-box">
+  <h2>DAPAZ HACKER</h2>
+
+  <input type="text" id="usuario" placeholder="Usuário">
+  <input type="password" id="senha" placeholder="Senha">
+
+  <button onclick="logar()">ENTRAR</button>
 </div>
 
-<div class="saldo">
-Saldo: R$ <span id="saldo">100.00</span>
+<!-- PAINEL -->
+<div id="painel">
+  <h2>ACESSO LIBERADO</h2>
+
+  <div class="option" onclick="sensibilidade()">
+    SENSIBILIDADE
+  </div>
+
+  <div class="option" onclick="telaFake()">
+    TELA FAKE
+  </div>
+
+  <div class="option" onclick="telaNetflix()">
+    TELA NETFLIX
+  </div>
 </div>
-
-<div class="slot">
-
-<div class="reels">
-
-<div class="reel" id="r1">🍊</div>
-<div class="reel" id="r2">🐯</div>
-<div class="reel" id="r3">💰</div>
-
-</div>
-
-<button class="spin" onclick="girar()">
-GIRAR
-</button>
-
-<h2 id="msg"></h2>
-
-</div>
-
 
 <script>
+function logar() {
 
-let saldo = 100;
+  var user = document.getElementById("usuario").value;
+  var pass = document.getElementById("senha").value;
 
-let simbolos = ["🐯","🍊","💰","7️⃣","🍀"];
+  if(user && pass) {
 
+    document.getElementById("login-box").style.display = "none";
+    document.getElementById("painel").style.display = "block";
 
-function girar(){
+  } else {
 
-let vezes = 15;
+    alert("Digite usuário e senha");
 
-let anim = setInterval(()=>{
+  }
+}
 
-r1.innerHTML =
-simbolos[Math.floor(Math.random()*simbol
+function sensibilidade() {
+  alert("Sensibilidade aplicada com sucesso");
+}
+
+function telaFake() {
+  alert("Tela Fake ativada");
+}
+
+function telaNetflix() {
+  alert("Abrindo Tela Netflix...");
+}
+</script>
+
+</body>
+</html>
