@@ -3,72 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>roleta dapaz pikudo</title>
+
+<title>Roleta Profissional do Felipe</title>
 
 <style>
 
 body{
-    margin:0;
-    font-family: Arial;
-    background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
-    color:white;
-    text-align:center;
+margin:0;
+background:radial-gradient(circle,#0f2027,#203a43,#2c5364);
+color:white;
+font-family:Arial;
+text-align:center;
 }
 
 h1{
-    text-shadow:0 0 15px cyan;
+text-shadow:0 0 20px cyan;
 }
 
 textarea{
-    width:90%;
-    max-width:300px;
-    height:100px;
-    font-size:16px;
-    border-radius:10px;
-    padding:10px;
+width:300px;
+height:120px;
+border-radius:10px;
+padding:10px;
+font-size:16px;
 }
 
 button{
-    margin:5px;
-    padding:10px 15px;
-    font-size:16px;
-    border:none;
-    border-radius:10px;
-    background:cyan;
-    cursor:pointer;
+padding:10px 15px;
+margin:5px;
+font-size:16px;
+border:none;
+border-radius:10px;
+background:cyan;
+cursor:pointer;
+font-weight:bold;
 }
 
-canvas{
-    width:90%;
-    max-width:350px;
-    background:black;
-    border-radius:50%;
-    box-shadow:0 0 20px cyan;
+#container{
+position:relative;
+display:inline-block;
 }
 
 #seta{
-    font-size:40px;
+position:absolute;
+left:50%;
+top:-10px;
+transform:translateX(-50%);
+font-size:40px;
+z-index:10;
 }
 
-.nomeBtn{
-    display:block;
-    margin:3px auto;
-    background:red;
-    color:white;
+canvas{
+background:black;
+border-radius:50%;
+box-shadow:0 0 30px cyan;
 }
 
 .confete{
-    position:fixed;
-    width:10px;
-    height:10px;
-    top:-10px;
-    animation:cair 3s linear forwards;
+position:fixed;
+width:10px;
+height:10px;
+top:-10px;
+animation:cair linear forwards;
 }
 
 @keyframes cair{
-    to{
-        transform:translateY(100vh) rotate(720deg);
-    }
+to{
+transform:translateY(100vh) rotate(720deg);
+}
+}
+
+#ranking{
+margin-top:20px;
 }
 
 </style>
@@ -76,23 +82,30 @@ canvas{
 </head>
 <body>
 
-<h1>🎯 Roleta do Felipe</h1>
+<h1>🎯 Roleta Profissional</h1>
 
 <textarea id="nomes"></textarea><br>
 
-<button onclick="salvar()">Salvar nomes</button>
+<button onclick="salvar()">Salvar</button>
 <button onclick="girar()">Girar</button>
 <button onclick="resetar()">Reset</button>
+
+<br><br>
+
+<div id="container">
 
 <div id="seta">⬇</div>
 
 <canvas id="canvas" width="400" height="400"></canvas>
 
-<h3>🏆 Vencedores:</h3>
-<div id="vencedores"></div>
+</div>
 
-<h3>❌ Remover nome:</h3>
-<div id="remover"></div>
+<h2 id="resultado"></h2>
+
+<div id="ranking">
+<h3>🏆 Ranking:</h3>
+<div id="listaRanking"></div>
+</div>
 
 <audio id="tic">
 <source src="https://www.soundjay.com/mechanical/sounds/mechanical-clonk-1.mp3">
@@ -108,27 +121,34 @@ const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
 let nomes=[];
-let rotacao=0;
+let ranking=[];
+
+let anguloAtual=0;
+let velocidade=0;
 let girando=false;
 
-const cores=["red","blue","green","yellow","purple","orange","cyan"];
+const cores=[
+"#ff0000","#00ff00","#0000ff",
+"#ffff00","#ff00ff","#00ffff",
+"#ff8800","#00ff88"
+];
 
 function salvar(){
 
-let texto=document.getElementById("nomes").value;
-
-nomes=texto.split("\n").filter(n=>n.trim()!="");
+nomes=document.getElementById("nomes").value
+.split("\n")
+.filter(n=>n.trim()!="");
 
 localStorage.setItem("nomes",JSON.stringify(nomes));
 
 desenhar();
-mostrarRemover();
 
 }
 
 function carregar(){
 
 let salvo=localStorage.getItem("nomes");
+let rank=localStorage.getItem("ranking");
 
 if(salvo){
 
@@ -136,16 +156,23 @@ nomes=JSON.parse(salvo);
 
 document.getElementById("nomes").value=nomes.join("\n");
 
-desenhar();
-mostrarRemover();
+}
+
+if(rank){
+
+ranking=JSON.parse(rank);
+
+mostrarRanking();
 
 }
+
+desenhar();
 
 }
 
 function desenhar(){
 
-if(nomes.length==0) return;
+if(nomes.length==0)return;
 
 let ang=2*Math.PI/nomes.length;
 
@@ -154,19 +181,26 @@ ctx.clearRect(0,0,400,400);
 for(let i=0;i<nomes.length;i++){
 
 ctx.beginPath();
+
 ctx.moveTo(200,200);
+
 ctx.arc(200,200,200,i*ang,(i+1)*ang);
 
 ctx.fillStyle=cores[i%cores.length];
+
 ctx.fill();
 
 ctx.save();
 
 ctx.translate(200,200);
+
 ctx.rotate(i*ang+ang/2);
 
 ctx.fillStyle="white";
-ctx.fillText(nomes[i],80,5);
+
+ctx.font="bold 16px Arial";
+
+ctx.fillText(nomes[i],100,5);
 
 ctx.restore();
 
@@ -180,44 +214,84 @@ if(girando||nomes.length==0)return;
 
 girando=true;
 
-let tic=setInterval(()=>{
+velocidade=Math.random()*0.3+0.4;
+
+animar();
+
+}
+
+function animar(){
+
+anguloAtual+=velocidade;
+
+velocidade*=0.985;
+
+canvas.style.transform=`rotate(${anguloAtual}rad)`;
+
+if(Math.random()<0.2){
+
 document.getElementById("tic").play();
-},200);
 
-let indice=Math.floor(Math.random()*nomes.length);
+}
 
-let angulo=360/nomes.length;
+if(velocidade<0.002){
 
-let destino=270-(indice*angulo);
+finalizar();
 
-rotacao+=360*5+destino;
+return;
 
-canvas.style.transition="4s";
-canvas.style.transform="rotate("+rotacao+"deg)";
+}
 
-setTimeout(()=>{
+requestAnimationFrame(animar);
 
-clearInterval(tic);
+}
+
+function finalizar(){
+
+let angulo=anguloAtual%(2*Math.PI);
+
+let setor=(2*Math.PI)/nomes.length;
+
+let indice=Math.floor((2*Math.PI-angulo)/setor)%nomes.length;
 
 let vencedor=nomes[indice];
 
-document.getElementById("win").play();
+document.getElementById("resultado").innerText=
+"🏆 "+vencedor;
 
-document.getElementById("vencedores").innerHTML+=vencedor+"<br>";
+document.getElementById("win").play();
 
 confete();
 
+// adiciona ao ranking
+ranking.push(vencedor);
+
+localStorage.setItem("ranking",JSON.stringify(ranking));
+
+mostrarRanking();
+
+// remove automaticamente
 nomes.splice(indice,1);
 
 localStorage.setItem("nomes",JSON.stringify(nomes));
 
 desenhar();
 
-mostrarRemover();
-
 girando=false;
 
-},4000);
+}
+
+function mostrarRanking(){
+
+let div=document.getElementById("listaRanking");
+
+div.innerHTML="";
+
+ranking.forEach((nome,i)=>{
+
+div.innerHTML+=(i+1)+". "+nome+"<br>";
+
+});
 
 }
 
@@ -231,9 +305,11 @@ c.className="confete";
 
 c.style.left=Math.random()*100+"vw";
 
-c.style.background=cores[Math.floor(Math.random()*cores.length)];
+c.style.background=
+cores[Math.floor(Math.random()*cores.length)];
 
-c.style.animationDuration=(Math.random()*3+2)+"s";
+c.style.animationDuration=
+(Math.random()*3+2)+"s";
 
 document.body.appendChild(c);
 
@@ -246,48 +322,16 @@ setTimeout(()=>c.remove(),5000);
 function resetar(){
 
 localStorage.removeItem("nomes");
+localStorage.removeItem("ranking");
 
 nomes=[];
+ranking=[];
 
 document.getElementById("nomes").value="";
-
-document.getElementById("vencedores").innerHTML="";
-
-document.getElementById("remover").innerHTML="";
+document.getElementById("resultado").innerText="";
+document.getElementById("listaRanking").innerHTML="";
 
 ctx.clearRect(0,0,400,400);
-
-}
-
-function mostrarRemover(){
-
-let div=document.getElementById("remover");
-
-div.innerHTML="";
-
-nomes.forEach((nome,i)=>{
-
-let btn=document.createElement("button");
-
-btn.innerText=nome;
-
-btn.className="nomeBtn";
-
-btn.onclick=()=>{
-
-nomes.splice(i,1);
-
-localStorage.setItem("nomes",JSON.stringify(nomes));
-
-desenhar();
-
-mostrarRemover();
-
-};
-
-div.appendChild(btn);
-
-});
 
 }
 
