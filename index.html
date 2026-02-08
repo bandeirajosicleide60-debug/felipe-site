@@ -1,275 +1,124 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DAPAZ CASSINO</title>
+
+<title>DAPAZ TIGRINHO</title>
 
 <style>
 
 body{
 margin:0;
-font-family:Arial, sans-serif;
-background:#3b0a75;
+background:#8B0000;
+font-family:Arial;
 color:white;
+text-align:center;
 }
 
-/* TOPO */
+/* TOPO TIGRE */
 
 .topo{
-background:linear-gradient(90deg,#6a00ff,#a020f0);
-padding:12px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.logo{
+background:url("https://i.imgur.com/7QZ6Q9A.png");
+background-size:cover;
+padding:40px;
 font-size:22px;
 font-weight:bold;
-color:#ffcc00;
 }
 
-.saldo-box{
-display:flex;
-align-items:center;
-gap:10px;
-}
+/* SLOT */
 
-.saldo{
-background:#5c00cc;
-padding:6px 12px;
-border-radius:20px;
-}
-
-.depositar{
-background:#ff66cc;
-border:none;
-padding:6px 12px;
-border-radius:20px;
-color:white;
-font-weight:bold;
-}
-
-/* CARDS */
-
-.games{
-padding:15px;
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-}
-
-.card{
-background:#5a189a;
-border-radius:15px;
-overflow:hidden;
-box-shadow:0 0 10px rgba(0,0,0,0.5);
-}
-
-.card img{
-width:100%;
-}
-
-.card p{
-margin:8px;
-font-weight:bold;
-}
-
-/* BARRA INFERIOR */
-
-.footer{
-position:fixed;
-bottom:0;
-width:100%;
-background:#4b0082;
-display:flex;
-justify-content:space-around;
-padding:10px;
-}
-
-.footer div{
-text-align:center;
-font-size:12px;
-}
-
-/* TIGRINHO */
-
-.hidden{
-display:none;
-}
-
-.center{
-text-align:center;
+.slot{
+background:#b30000;
+margin:20px;
 padding:20px;
+border-radius:15px;
+box-shadow:0 0 20px gold;
 }
+
+.reels{
+display:flex;
+justify-content:center;
+gap:10px;
+font-size:40px;
+}
+
+.reel{
+background:#fff;
+color:black;
+padding:20px;
+border-radius:10px;
+width:60px;
+}
+
+/* BOTAO GIRAR */
 
 .spin{
-background:#ffcc00;
+background:linear-gradient(gold,orange);
 border:none;
-padding:15px 30px;
-border-radius:10px;
+width:100px;
+height:100px;
+border-radius:50%;
 font-size:18px;
+font-weight:bold;
 margin-top:20px;
+box-shadow:0 0 20px gold;
+}
+
+/* SALDO */
+
+.saldo{
+background:black;
+padding:10px;
+margin:10px;
+border-radius:10px;
 }
 
 </style>
 
 </head>
+
 <body>
 
-
-<!-- TOPO -->
-
 <div class="topo">
+🐯 DAPAZ TIGRINHO
+</div>
 
-<div class="logo">DAPAZ CASSINO</div>
+<div class="saldo">
+Saldo: R$ <span id="saldo">100.00</span>
+</div>
 
-<div class="saldo-box">
+<div class="slot">
 
-<div class="saldo" id="saldo">R$ 100,00</div>
+<div class="reels">
 
-<button class="depositar" onclick="depositar()">Depositar</button>
+<div class="reel" id="r1">🍊</div>
+<div class="reel" id="r2">🐯</div>
+<div class="reel" id="r3">💰</div>
 
 </div>
 
-</div>
+<button class="spin" onclick="girar()">
+GIRAR
+</button>
 
-
-
-<!-- HOME -->
-
-<div id="home">
-
-<div class="games">
-
-<div class="card" onclick="abrirTigre()">
-<img src="https://i.imgur.com/WzQX9bA.png">
-<p>Fortune Tiger</p>
-</div>
-
-<div class="card">
-<img src="https://i.imgur.com/6X4QZ5G.png">
-<p>Fortune Rabbit</p>
-</div>
-
-<div class="card">
-<img src="https://i.imgur.com/nkKQZ7G.png">
-<p>Fortune Dragon</p>
-</div>
-
-<div class="card">
-<img src="https://i.imgur.com/WzQX9bA.png">
-<p>Coming Soon</p>
-</div>
+<h2 id="msg"></h2>
 
 </div>
-
-</div>
-
-
-
-<!-- TIGRE -->
-
-<div id="tigre" class="hidden center">
-
-<h1>🐯 Fortune Tiger</h1>
-
-<h2 id="resultado">Saldo atual</h2>
-
-<button class="spin" onclick="girar()">GIRAR</button>
-
-<br><br>
-
-<button onclick="voltar()">Voltar</button>
-
-</div>
-
-
-
-<!-- MENU INFERIOR -->
-
-<div class="footer">
-
-<div>🏠<br>Inicio</div>
-
-<div>🎁<br>Bônus</div>
-
-<div>🎰<br>Slots</div>
-
-<div>👤<br>Perfil</div>
-
-</div>
-
 
 
 <script>
 
 let saldo = 100;
 
-function atualizarSaldo(){
-
-document.getElementById("saldo").innerText =
-"R$ " + saldo.toFixed(2);
-
-}
-
-
-function depositar(){
-
-alert("Depósitos desativados no modo demo");
-
-}
-
-
-function abrirTigre(){
-
-home.classList.add("hidden");
-tigre.classList.remove("hidden");
-
-}
-
-
-function voltar(){
-
-home.classList.remove("hidden");
-tigre.classList.add("hidden");
-
-}
+let simbolos = ["🐯","🍊","💰","7️⃣","🍀"];
 
 
 function girar(){
 
-let win = Math.random() > 0.5;
+let vezes = 15;
 
-if(win){
+let anim = setInterval(()=>{
 
-let valor = Math.floor(Math.random()*50);
-
-saldo += valor;
-
-resultado.innerText =
-"Ganhou R$ " + valor;
-
-}else{
-
-let valor = Math.floor(Math.random()*30);
-
-saldo -= valor;
-
-resultado.innerText =
-"Perdeu R$ " + valor;
-
-}
-
-if(saldo < 0) saldo = 0;
-
-atualizarSaldo();
-
-}
-
-</script>
-
-
-</body>
-</html>
+r1.innerHTML =
+simbolos[Math.floor(Math.random()*simbol
