@@ -3,116 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Links de Perfil</title>
+    <title>Smart Remote Hub</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        :root {
+            --bg-color: #0f1014;
+            --glass: rgba(255, 255, 255, 0.05);
+            --accent: #00d4ff;
+            --text: #ffffff;
+        }
+
         body {
-            background-color: #121212;
-            color: white;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 360px;
+            height: 740px;
+            background: #1a1c23;
+            border-radius: 40px;
+            border: 8px solid #333;
+            position: relative;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
             padding: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
-        .profile-container {
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+
+        .device-selector {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .device-card {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 15px;
+            min-width: 80px;
             text-align: center;
-            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .profile-pic {
-            width: 130px;
-            height: 130px;
+        .device-card.active {
+            background: var(--accent);
+            color: #000;
+        }
+
+        /* D-Pad Central */
+        .d-pad-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .d-pad {
+            width: 200px;
+            height: 200px;
+            background: var(--glass);
             border-radius: 50%;
-            border: 3px solid #70f0b4;
-            object-fit: cover;
-            margin-bottom: 15px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        h1 {
-            font-size: 26px;
-            margin: 10px 0 5px;
+        .d-btn {
+            position: absolute;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
         }
 
-        .description {
-            color: #a0a0a0;
-            font-size: 14px;
+        .btn-up { top: 15px; }
+        .btn-down { bottom: 15px; }
+        .btn-left { left: 15px; }
+        .btn-right { right: 15px; }
+        .btn-ok {
+            width: 70px;
+            height: 70px;
+            background: var(--accent);
+            border-radius: 50%;
+            color: black;
+            font-weight: bold;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* Controles Verticais */
+        .vertical-controls {
+            display: flex;
+            justify-content: space-around;
             margin-bottom: 30px;
         }
 
-        .links-container {
-            width: 100%;
-            max-width: 380px;
-        }
-
-        .link-button {
+        .v-stack {
+            background: var(--glass);
+            border-radius: 30px;
             display: flex;
+            flex-direction: column;
+            padding: 10px;
             align-items: center;
-            justify-content: center;
-            background-color: #70f0b4;
-            color: #000;
-            text-decoration: none;
-            padding: 16px;
-            margin-bottom: 15px;
+            gap: 20px;
+        }
+
+        /* Atalhos Streaming */
+        .shortcuts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .app-btn {
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px;
             border-radius: 12px;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
         }
 
-        .link-button:hover {
-            transform: scale(1.03);
-            background-color: #5ecf9b;
-        }
-
-        .link-button span {
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        .link-button.special {
-            background: linear-gradient(135deg, #70f0b4, #489b77);
-        }
-
-        footer {
-            margin-top: 40px;
-            font-size: 11px;
-            color: #555;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
     </style>
 </head>
 <body>
 
-    <div class="profile-container">
-        <img src="IMG_5902.jpeg" alt="IMG_5902.jpeg" class="profile-pic">
-        
-        <h1>Dapaz</h1>
-        <p class="description">Criador de conteúdo | Gamer | Empreendedor</p>
+    <div class="phone-container">
+        <header>
+            <div>
+                <small style="color: #888;">Sala de Estar</small>
+                <h2 style="margin: 0;">Samsung QLED</h2>
+            </div>
+            <i data-lucide="power" style="color: #ff4d4d; cursor: pointer;"></i>
+        </header>
+
+        <div class="device-selector">
+            <div class="device-card active">
+                <i data-lucide="tv"></i>
+                <div style="font-size: 12px; margin-top: 5px;">TV</div>
+            </div>
+            <div class="device-card">
+                <i data-lucide="fan"></i>
+                <div style="font-size: 12px; margin-top: 5px;">AC</div>
+            </div>
+            <div class="device-card">
+                <i data-lucide="lightbulb"></i>
+                <div style="font-size: 12px; margin-top: 5px;">Luzes</div>
+            </div>
+        </div>
+
+        <div class="d-pad-container">
+            <div class="d-pad">
+                <button class="d-btn btn-up"><i data-lucide="chevron-up"></i></button>
+                <button class="d-btn btn-down"><i data-lucide="chevron-down"></i></button>
+                <button class="d-btn btn-left"><i data-lucide="chevron-left"></i></button>
+                <button class="d-btn btn-right"><i data-lucide="chevron-right"></i></button>
+                <button class="d-btn btn-ok">OK</button>
+            </div>
+        </div>
+
+        <div class="vertical-controls">
+            <div class="v-stack">
+                <i data-lucide="plus"></i>
+                <span>VOL</span>
+                <i data-lucide="minus"></i>
+            </div>
+            <div class="v-stack">
+                <i data-lucide="chevron-up"></i>
+                <span>CH</span>
+                <i data-lucide="chevron-down"></i>
+            </div>
+        </div>
+
+        <div class="shortcuts">
+            <button class="app-btn" style="border-left: 4px solid #e50914;">Netflix</button>
+            <button class="app-btn" style="border-left: 4px solid #ff0000;">YouTube</button>
+            <button class="app-btn" style="border-left: 4px solid #00a8e1;">Prime</button>
+            <button class="app-btn" style="border-left: 4px solid #f9d71c;">Disney+</button>
+        </div>
     </div>
 
-    <div class="links-container">
-        <a href="#" target="_blank" class="link-button">
-            <span>📸</span> Instagram
-        </a>
-        <a href="#" target="_blank" class="link-button">
-            <span>🎮</span> YouTube
-        </a>
-        <a href="#" target="_blank" class="link-button">
-            <span>💬</span> WhatsApp
-        </a>
-        <a href="#" target="_blank" class="link-button special">
-            <span>💰</span> Meu Site
-        </a>
-    </div>
+    <script>
+        // Inicializa os ícones do Lucide
+        lucide.createIcons();
 
-    <footer>
-        Criado por DAPAZ DEV
-    </footer>
-
+        // Simulação de clique nos botões
+        document.querySelectorAll('button, .device-card').forEach(button => {
+            button.addEventListener('click', () => {
+                button.style.transform = 'scale(0.95)';
+                setTimeout(() => button.style.transform = 'scale(1)', 100);
+            });
+        });
+    </script>
 </body>
 </html>
